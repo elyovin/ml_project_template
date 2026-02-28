@@ -14,7 +14,7 @@ from src.logger.logger import setup_logging
 from src.utils.io_utils import ROOT_PATH
 
 
-def set_worker_seed(worker_id):
+def set_worker_seed(worker_id: int) -> None:
     """
     Set seed for each dataloader worker.
 
@@ -28,7 +28,7 @@ def set_worker_seed(worker_id):
     random.seed(worker_seed)
 
 
-def set_random_seed(seed):
+def set_random_seed(seed: int) -> None:
     """
     Set random seed for model training or inference.
 
@@ -58,10 +58,12 @@ def generate_id(length: int = 8) -> str:
     # There are ~2.8T base-36 8-digit strings. If we generate 210k ids,
     # we'll have a ~1% chance of collision.
     alphabet = string.ascii_lowercase + string.digits
-    return "".join(secrets.choice(alphabet) for _ in range(length))
+    gen = (secrets.choice(alphabet) for _ in range(length))
+
+    return "".join(gen)
 
 
-def log_git_commit_and_patch(save_dir):
+def log_git_commit_and_patch(save_dir) -> None:
     """
     Log current git commit and patch to save dir.
     Improves reproducibility by allowing to run the same code version:
@@ -79,14 +81,15 @@ def log_git_commit_and_patch(save_dir):
     """
     print("Logging git commit and patch...")
     commit_path = save_dir / "git_commit.txt"
-    patch_path = save_dir / "git_diff.patch"
     with commit_path.open("w") as f:
         subprocess.call(["git", "rev-parse", "HEAD"], stdout=f)
+
+    patch_path = save_dir / "git_diff.patch"
     with patch_path.open("w") as f:
         subprocess.call(["git", "diff", "HEAD"], stdout=f)
 
 
-def resume_config(save_dir):
+def resume_config(save_dir) -> str:
     """
     Get run_id from resume config to continue logging
     to the same experiment.
@@ -99,10 +102,11 @@ def resume_config(save_dir):
     saved_config = OmegaConf.load(save_dir / "config.yaml")
     run_id = saved_config.writer.run_id
     print(f"Resuming training from run {run_id}...")
+
     return run_id
 
 
-def saving_init(save_dir, config):
+def saving_init(save_dir, config) -> None:
     """
     Initialize saving by getting run_id.
 
@@ -129,9 +133,9 @@ def saving_init(save_dir, config):
     if run_id is None:
         run_id = generate_id(length=config.writer.id_length)
 
-    OmegaConf.set_struct(config, False)
-    config.writer.run_id = run_id
-    OmegaConf.set_struct(config, True)
+    OmegaConf.set_struct(config, False)  # enable adding keys
+    config.writer.run_id = run_id  # adding new run_id key
+    OmegaConf.set_struct(config, True)  # disable adding keys
 
     OmegaConf.save(config, save_dir / "config.yaml")
 
@@ -153,9 +157,10 @@ def setup_saving_and_logging(config):
     saving_init(save_dir, config)
 
     if config.trainer.get("resume_from") is not None:
-        setup_logging(save_dir, append=True)
+        setup_logging(save_dir, append=True)  # append to file
     else:
-        setup_logging(save_dir, append=False)
+        setup_logging(save_dir, append=False)  # overwrite file
+
     logger = logging.getLogger("train")
     logger.setLevel(logging.DEBUG)
 

@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT_PATH = Path(__file__).absolute().resolve().parent.parent.parent
 
 
-def read_json(fname):
+def read_json(fname: str) -> list:
     """
     Read the given json file.
 
@@ -19,7 +19,7 @@ def read_json(fname):
         return json.load(handle, object_hook=OrderedDict)
 
 
-def write_json(content, fname):
+def write_json(content, fname: str) -> None:
     """
     Write the content to the given json file.
 

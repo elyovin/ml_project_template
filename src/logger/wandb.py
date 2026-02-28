@@ -14,14 +14,14 @@ class WandBWriter:
     def __init__(
         self,
         logger,
-        project_config,
-        project_name,
+        project_config: dict,
+        project_name: str,
         entity=None,
         run_id=None,
         run_name=None,
         mode="online",
         **kwargs,
-    ):
+    ) -> None:
         """
         API key is expected to be provided by the user in the terminal.
 
@@ -88,7 +88,7 @@ class WandBWriter:
             )
             self.timer = datetime.now()
 
-    def _object_name(self, object_name):
+    def _object_name(self, object_name: str) -> str:
         """
         Update object_name (scalar, image, etc.) with the
         current mode (partition name). Used to separate metrics
@@ -101,7 +101,7 @@ class WandBWriter:
         """
         return f"{object_name}_{self.mode}"
 
-    def add_checkpoint(self, checkpoint_path, save_dir):
+    def add_checkpoint(self, checkpoint_path: str, save_dir: str) -> None:
         """
         Log checkpoints to the experiment tracker.
 
@@ -114,7 +114,7 @@ class WandBWriter:
         """
         self.wandb.save(checkpoint_path, base_path=save_dir)
 
-    def add_scalar(self, scalar_name, scalar):
+    def add_scalar(self, scalar_name: str, scalar: float) -> None:
         """
         Log a scalar to the experiment tracker.
 
@@ -129,7 +129,7 @@ class WandBWriter:
             step=self.step,
         )
 
-    def add_scalars(self, scalars):
+    def add_scalars(self, scalars: dict) -> None:
         """
         Log several scalars to the experiment tracker.
 
@@ -144,7 +144,7 @@ class WandBWriter:
             step=self.step,
         )
 
-    def add_image(self, image_name, image):
+    def add_image(self, image_name: str, image) -> None:
         """
         Log an image to the experiment tracker.
 
@@ -157,7 +157,7 @@ class WandBWriter:
             {self._object_name(image_name): self.wandb.Image(image)}, step=self.step
         )
 
-    def add_audio(self, audio_name, audio, sample_rate=None):
+    def add_audio(self, audio_name: str, audio, sample_rate=None) -> None:
         """
         Log an audio to the experiment tracker.
 
@@ -176,7 +176,7 @@ class WandBWriter:
             step=self.step,
         )
 
-    def add_text(self, text_name, text):
+    def add_text(self, text_name: str, text: str) -> None:
         """
         Log text to the experiment tracker.
 
@@ -188,7 +188,7 @@ class WandBWriter:
             {self._object_name(text_name): self.wandb.Html(text)}, step=self.step
         )
 
-    def add_histogram(self, hist_name, values_for_hist, bins=None):
+    def add_histogram(self, hist_name: str, values_for_hist, bins=None) -> None:
         """
         Log histogram to the experiment tracker.
 
@@ -207,7 +207,7 @@ class WandBWriter:
 
         self.wandb.log({self._object_name(hist_name): hist}, step=self.step)
 
-    def add_table(self, table_name, table: pd.DataFrame):
+    def add_table(self, table_name: str, table: pd.DataFrame) -> None:
         """
         Log table to the experiment tracker.
 

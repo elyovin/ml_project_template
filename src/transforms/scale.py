@@ -20,4 +20,5 @@ class RandomScale1D(nn.Module):
         """
         scale = torch.randn(1)
         x = scale * x
+
         return x
