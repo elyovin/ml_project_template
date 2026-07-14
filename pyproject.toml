@@ -1,0 +1,26 @@
+[project]
+name = "ml-project-template"
+version = "0.1.0"
+description = "PyTorch Template for DL projects"
+requires-python = "==3.11.*"
+dependencies = [
+    "torch==2.2.0",
+    "torchvision==0.17.0",
+    "torchmetrics",
+    "numpy==1.26.4",
+    "tqdm",
+    "matplotlib",
+    "pandas",
+    "wandb",
+    "hydra-core",
+]
+
+[dependency-groups]
+dev = [
+    "black",
+    "isort",
+    "pre-commit",
+]
+
+[tool.uv]
+package = false

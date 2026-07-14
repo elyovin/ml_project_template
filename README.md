@@ -9,42 +9,27 @@
 
 ## Installation
 
-Installation may depend on your task. The general steps are the following:
+This project uses [`uv`](https://docs.astral.sh/uv/) for dependency and Python
+version management. The Python version is pinned in `.python-version` (3.11).
 
-0. (Optional) Create and activate new environment using [`conda`](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html) or `venv` ([`+pyenv`](https://github.com/pyenv/pyenv)).
-
-   a. `conda` version:
+0. Install `uv` (see the [installation guide](https://docs.astral.sh/uv/getting-started/installation/)):
 
    ```bash
-   # create env
-   conda create -n project_env python=PYTHON_VERSION
-
-   # activate env
-   conda activate project_env
+   curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
 
-   b. `venv` (`+pyenv`) version:
+1. Create the environment and install all dependencies (including dev tools). `uv`
+   automatically downloads Python 3.11 if it is not already available and creates a
+   `.venv` in the project root:
 
    ```bash
-   # create env
-   ~/.pyenv/versions/PYTHON_VERSION/bin/python3 -m venv project_env
-
-   # alternatively, using default python version
-   python3 -m venv project_env
-
-   # activate env
-   source project_env/bin/activate
-   ```
-
-1. Install all required packages
-
-   ```bash
-   pip install -r requirements.txt
+   uv sync
    ```
 
 2. Install `pre-commit`:
+
    ```bash
-   pre-commit install
+   uv run pre-commit install
    ```
 
 ## How To Use
@@ -52,7 +37,7 @@ Installation may depend on your task. The general steps are the following:
 To train a model, run the following command:
 
 ```bash
-python3 train.py -cn=CONFIG_NAME HYDRA_CONFIG_ARGUMENTS
+uv run python train.py -cn=CONFIG_NAME HYDRA_CONFIG_ARGUMENTS
 ```
 
 Where `CONFIG_NAME` is a config from `src/configs` and `HYDRA_CONFIG_ARGUMENTS` are optional arguments.
@@ -60,8 +45,11 @@ Where `CONFIG_NAME` is a config from `src/configs` and `HYDRA_CONFIG_ARGUMENTS` 
 To run inference (evaluate the model or save predictions):
 
 ```bash
-python3 inference.py HYDRA_CONFIG_ARGUMENTS
+uv run python inference.py HYDRA_CONFIG_ARGUMENTS
 ```
+
+> You can also activate the environment (`source .venv/bin/activate`) and run
+> `python train.py ...` directly, without the `uv run` prefix.
 
 ## Credits
 
